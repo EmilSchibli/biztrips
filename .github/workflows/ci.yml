@@ -1,0 +1,28 @@
+name: Java CI mit Maven
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: Setze Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Baue mit Maven
+        run: mvn -B clean verify
+
+      - name: Erzeuge Dependency-Check Bericht
+        run: mvn org.owasp:dependency-check-maven:check
