@@ -22,7 +22,7 @@ jobs:
           java-version: '21'
 
       - name: Baue mit Maven
-        run: mvn -B clean verify
+        run: mvn clean package
 
       - name: Erzeuge Dependency-Check Bericht
         run: mvn org.owasp:dependency-check-maven:check
