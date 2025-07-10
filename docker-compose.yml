@@ -5,17 +5,16 @@ services:
       - "8083:8083"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-    volumes:
-      - ./logs:/app/logs
+      - JAVA_OPTS=-Xmx512m -Xms256m  # Optimize memory usage
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8083/actuator/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
+      interval: 10s  # Check more frequently
+      timeout: 5s    # Faster timeout
+      retries: 6     # More retries with shorter intervals
+      start_period: 20s  # Reduced startup time
 
-  # Cypress testing service
+  # Cypress testing service (optimized for CI)
   cypress:
     image: cypress/included:13.6.4
     depends_on:
@@ -23,11 +22,12 @@ services:
         condition: service_healthy
     environment:
       - CYPRESS_baseUrl=http://app:8083
+      - CYPRESS_video=false  # Disable video in CI for speed
+      - CYPRESS_screenshotOnRunFailure=true
     working_dir: /e2e
     volumes:
       - ./cypress:/e2e/cypress
       - ./cypress.config.js:/e2e/cypress.config.js
-      - ./cypress/downloads:/e2e/cypress/downloads
       - ./cypress/screenshots:/e2e/cypress/screenshots
       - ./cypress/videos:/e2e/cypress/videos
     entrypoint: [""]
