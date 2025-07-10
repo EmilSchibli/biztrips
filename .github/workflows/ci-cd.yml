@@ -56,10 +56,10 @@ jobs:
 
       - name: Static analysis (fast)
         run: mvn spotbugs:check -DskipTests || echo "Spotbugs issues found"
-          
+
   test:
     runs-on: ubuntu-latest
-    timeout-minutes: 15  # Prevent hanging builds
+    timeout-minutes: 15 # Prevent hanging builds
 
     steps:
       - name: Checkout code
@@ -144,7 +144,7 @@ jobs:
     timeout-minutes: 10
     if: github.ref == 'refs/heads/main'
     # Run in parallel with tests, not after
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
