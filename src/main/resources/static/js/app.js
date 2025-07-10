@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const API_URL = 'http://localhost:8083/v1';
+    // Use relative URL that works both locally and in Docker
+    const API_URL = '/v1';
 
     const tripsList = document.getElementById('trips-list');
     const addTripForm = document.getElementById('add-trip-form');

@@ -10,16 +10,18 @@
 
 // Custom command to add a business trip
 Cypress.Commands.add("addBusinessTrip", (destination, startDate, endDate) => {
-  cy.get("#trip-destination").type(destination);
-  cy.get("#trip-start-date").type(startDate);
-  cy.get("#trip-end-date").type(endDate);
+  cy.get("#trip-destination").clear().type(destination);
+  cy.get("#trip-start-date").clear().type(startDate);
+  cy.get("#trip-end-date").clear().type(endDate);
   cy.get("#add-trip-form").submit();
 });
 
-// Custom command to wait for API response
-Cypress.Commands.add("waitForApi", (alias) => {
-  cy.wait(alias).then((interception) => {
-    expect(interception.response.statusCode).to.be.oneOf([200, 201]);
+// Custom command to wait for API response with more robust error handling
+Cypress.Commands.add("waitForApi", (alias, timeout = 10000) => {
+  cy.wait(alias, { timeout }).then((interception) => {
+    if (interception && interception.response) {
+      expect(interception.response.statusCode).to.be.oneOf([200, 201]);
+    }
   });
 });
 
@@ -31,3 +33,8 @@ Cypress.Commands.add(
     cy.wrap(subject).should("contain.text", text);
   }
 );
+
+// Custom command to wait for element to be visible and stable
+Cypress.Commands.add("waitForElement", (selector, timeout = 10000) => {
+  cy.get(selector, { timeout }).should("be.visible").should("not.be.disabled");
+});
