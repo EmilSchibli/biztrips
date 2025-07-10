@@ -1,0 +1,26 @@
+{
+  "name": "biztrips-e2e-tests",
+  "version": "1.0.0",
+  "description": "End-to-end tests for Business Trips application",
+  "scripts": {
+    "cy:open": "cypress open",
+    "cy:run": "cypress run",
+    "cy:run:headed": "cypress run --headed",
+    "cy:run:chrome": "cypress run --browser chrome",
+    "cy:run:firefox": "cypress run --browser firefox",
+    "test:e2e": "cypress run",
+    "test:e2e:ci": "cypress run --reporter junit --reporter-options mochaFile=cypress/results/results-[hash].xml"
+  },
+  "devDependencies": {
+    "cypress": "^13.6.4"
+  },
+  "keywords": [
+    "cypress",
+    "e2e",
+    "testing",
+    "spring-boot",
+    "business-trips"
+  ],
+  "author": "",
+  "license": "ISC"
+}

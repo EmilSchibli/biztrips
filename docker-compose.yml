@@ -1,0 +1,47 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8083:8083"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    volumes:
+      - ./logs:/app/logs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8083/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Cypress testing service
+  cypress:
+    image: cypress/included:13.6.4
+    depends_on:
+      - app
+    environment:
+      - CYPRESS_baseUrl=http://app:8083
+    working_dir: /e2e
+    volumes:
+      - ./cypress:/e2e/cypress
+      - ./cypress.config.js:/e2e/cypress.config.js
+      - ./cypress/downloads:/e2e/cypress/downloads
+      - ./cypress/screenshots:/e2e/cypress/screenshots
+      - ./cypress/videos:/e2e/cypress/videos
+    command: >
+      sh -c "
+        echo 'Waiting for application to be ready...' &&
+        until curl -f http://app:8083/; do
+          echo 'Application not ready, waiting...'
+          sleep 5
+        done &&
+        echo 'Application is ready, running Cypress tests...' &&
+        cypress run
+      "
+    networks:
+      - default
+
+networks:
+  default:
+    driver: bridge

@@ -1,0 +1,14 @@
+target/
+.git/
+.gitignore
+README.md
+.env
+.DS_Store
+.vscode/
+.idea/
+*.iml
+node_modules/
+cypress/videos/
+cypress/screenshots/
+cypress/downloads/
+logs/

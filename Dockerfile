@@ -1,16 +1,27 @@
-# A two Stage Dockerfile with a build stage and a run -stage!
-FROM maven:3.6.3-jdk-11 as backend-build
-WORKDIR ./
-COPY pom.xml .
-### Step 2 Copy the source and build the .jar
-COPY src src
-# we run first a build 
-RUN mvn install -DskipTests
+# Multi-stage Dockerfile
+# Stage 1: Build the application
+FROM maven:3.9.6-eclipse-temurin-21 AS backend-build
 
-CMD mvn clean spring-boot:run
-### Stage 2 - Let's build a minimal image with the "deployable package"
-#FROM openjdk:8-jdk-alpine
-# we add the jar to the working dir and execute it!
-#COPY  target/*.jar app.jar
-# Define an Entry-startpoint of the image
-#ENTRYPOINT ["sh", "-c", "java -jar app.jar"]
+WORKDIR /app
+
+# Copy the Maven POM and resolve dependencies (layer caching)
+COPY pom.xml .
+RUN mvn dependency:go-offline
+
+# Copy source code and build the JAR
+COPY src src
+RUN mvn clean package -DskipTests
+
+# Stage 2: Run the application
+FROM eclipse-temurin:21-jre
+
+WORKDIR /app
+
+# Copy the built JAR from the build stage
+COPY --from=backend-build /app/target/*.jar app.jar
+
+# Expose the port the app runs on
+EXPOSE 8083
+
+# Run the application
+ENTRYPOINT ["java", "-jar", "app.jar"]
