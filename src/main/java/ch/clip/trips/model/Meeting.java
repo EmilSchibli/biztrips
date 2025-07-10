@@ -1,83 +1,83 @@
 package ch.clip.trips.model;
 
-import java.io.Serializable;
-import java.math.BigDecimal;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
 
-import lombok.Data;
+import java.util.Objects;
 
-@Data
 @Entity
-public class Meeting implements Serializable {
+public class Meeting {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String title;
+    private String description;
 
-	private static final long serialVersionUID = 6705527563808382509L;
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	private String title;
-	private String description;
+    @ManyToOne
+    @JoinColumn(name = "business_trip_id")
+    @JsonBackReference
+    private BusinessTrip businessTrip;
 
-	@ManyToOne
-	@JoinColumn(name = "business_trip_idfs")
-	@JsonBackReference
-	private BusinessTrip businessTrip;
+    public Meeting() {
+    }
 
-	public Meeting(Long id, String title, String description, BusinessTrip businessTrip) {
-		super();
-		this.id = id;
-		this.title = title;
-		this.description = description;
-		this.businessTrip = businessTrip;
-	}
+    public Meeting(String title, String description, BusinessTrip businessTrip) {
+        this.title = title;
+        this.description = description;
+        this.businessTrip = businessTrip;
+    }
 
-	public Meeting() {
-		super();
+    public Long getId() {
+        return id;
+    }
 
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public BusinessTrip getBusinessTrip() {
+        return businessTrip;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setBusinessTrip(BusinessTrip businessTrip) {
+        this.businessTrip = businessTrip;
+    }
 
-	public BusinessTrip getBusinessTrip() {
-		return businessTrip;
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Meeting meeting = (Meeting) o;
+        return Objects.equals(id, meeting.id);
+    }
 
-	public void setBusinessTrip(BusinessTrip businessTrip) {
-		this.businessTrip = businessTrip;
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 
-	@Override
-	public String toString() {
-		return "Meeting [id=" + id + ", title=" + title + ", description=" + description + "]";
-	}
-
+    @Override
+    public String toString() {
+        return "Meeting{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }

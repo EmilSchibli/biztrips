@@ -1,24 +1,15 @@
 package ch.clip.trips.model;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.List;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
 
-import lombok.Data;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
-@Data
 @Entity
-public class BusinessTrip implements Serializable {
-
-//	private static final long serialVersionUID = 67027563808382509L;
+public class BusinessTrip {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -27,26 +18,19 @@ public class BusinessTrip implements Serializable {
 	private LocalDateTime startTrip;
 	private LocalDateTime endTrip;
 
-	@OneToMany(mappedBy = "businessTrip")
+	@OneToMany(mappedBy = "businessTrip", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 	@JsonManagedReference
-	private List<Meeting> meetings;
-
+	private List<Meeting> meetings = new ArrayList<>();
 
 	public BusinessTrip() {
-		super();
-
 	}
 
-	public BusinessTrip(Long id, String title, String description, LocalDateTime startTrip, LocalDateTime endTrip) {
-		this();
-		this.id = id;
+	public BusinessTrip(String title, String description, LocalDateTime startTrip, LocalDateTime endTrip) {
 		this.title = title;
 		this.description = description;
 		this.startTrip = startTrip;
 		this.endTrip = endTrip;
 	}
-
-
 
 	public Long getId() {
 		return id;
@@ -72,16 +56,6 @@ public class BusinessTrip implements Serializable {
 		this.description = description;
 	}
 
-	public List<Meeting> getMeetings() {
-		return meetings;
-	}
-
-	public void setMeetings(List<Meeting> meetings) {
-		this.meetings = meetings;
-	}
-
-
-
 	public LocalDateTime getStartTrip() {
 		return startTrip;
 	}
@@ -98,12 +72,35 @@ public class BusinessTrip implements Serializable {
 		this.endTrip = endTrip;
 	}
 
-	@Override
-	public String toString() {
-		return "BusinessTrip [id=" + id + ", title=" + title + ", description=" + description + ", startTrip="
-				+ startTrip + ", endTrip=" + endTrip + ", meetings=" + meetings + "]";
+	public List<Meeting> getMeetings() {
+		return meetings;
 	}
 
+	public void setMeetings(List<Meeting> meetings) {
+		this.meetings = meetings;
+	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		BusinessTrip that = (BusinessTrip) o;
+		return Objects.equals(id, that.id);
+	}
 
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public String toString() {
+		return "BusinessTrip{" +
+				"id=" + id +
+				", title='" + title + '\'' +
+				", description='" + description + '\'' +
+				", startTrip=" + startTrip +
+				", endTrip=" + endTrip +
+				'}';
+	}
 }

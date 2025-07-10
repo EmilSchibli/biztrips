@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geschäftsreisen Verwaltung</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Geschäftsreisen Verwaltung</h1>
+
+        <div class="section">
+            <h2>Neue Geschäftsreise anlegen</h2>
+            <form id="add-trip-form">
+                <input type="text" id="trip-destination" placeholder="Reiseziel" required>
+                <input type="date" id="trip-start-date" required>
+                <input type="date" id="trip-end-date" required>
+                <button type="submit">Reise hinzufügen</button>
+            </form>
+        </div>
+
+        <div class="section">
+            <h2>Bestehende Geschäftsreisen</h2>
+            <ul id="trips-list">
+                <!-- Geschäftsreisen werden hier via JS eingefügt -->
+            </ul>
+        </div>
+
+        <div id="meetings-section" class="section" style="display: none;">
+            <h2 id="meetings-header">Meetings für ...</h2>
+            <ul id="meetings-list">
+                <!-- Meetings werden hier via JS eingefügt -->
+            </ul>
+            
+            <h3>Neues Meeting hinzufügen</h3>
+            <form id="add-meeting-form">
+                <input type="text" id="meeting-title" placeholder="Titel des Meetings" required>
+                <input type="text" id="meeting-description" placeholder="Beschreibung" required>
+                <button type="submit">Meeting hinzufügen</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html> 
