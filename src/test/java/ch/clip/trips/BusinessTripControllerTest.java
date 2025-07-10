@@ -23,10 +23,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import ch.clip.trips.dto.BusinessTripDto;
 import ch.clip.trips.dto.MeetingDto;
 import ch.clip.trips.model.Meeting;
+import org.springframework.test.context.ActiveProfiles;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @Transactional
+@ActiveProfiles("test")
 class BusinessTripControllerTest {
 
     @Autowired

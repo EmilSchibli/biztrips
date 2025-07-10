@@ -85,8 +85,21 @@ jobs:
       - name: Build application (skip tests for speed)
         run: mvn clean package -DskipTests
 
-      - name: Run unit tests in parallel
-        run: mvn test -T 1C
+      - name: Run unit tests with detailed output
+        run: |
+          echo "=== Starting tests with detailed logging ==="
+          mvn test -Dspring.profiles.active=test \
+                   -Dlogging.level.ch.clip.trips=DEBUG \
+                   -Dspring.jpa.show-sql=true \
+                   -X || {
+            echo "=== TEST FAILURE DETAILS ==="
+            echo "Listing surefire reports..."
+            find target/surefire-reports -name "*.txt" -exec echo "=== {} ===" \; -exec cat {} \;
+            echo "=== Listing XML reports ==="
+            find target/surefire-reports -name "*.xml" -exec echo "=== {} ===" \; -exec cat {} \;
+            echo "=== END TEST FAILURE DETAILS ==="
+            exit 1
+          }
 
       - name: Build Docker image with cache
         run: |
