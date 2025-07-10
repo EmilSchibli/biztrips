@@ -25,6 +25,7 @@ jobs:
         with:
           java-version: "21"
           distribution: "temurin"
+          cache: maven
 
       - name: Cache Maven dependencies
         uses: actions/cache@v4
@@ -33,12 +34,28 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
-      - name: Fast compile check
-        run: ./mvnw compile -T 1C
+      - name: Make Maven wrapper executable
+        run: chmod +x ./mvnw
+
+      - name: Debug environment
+        run: |
+          echo "=== Environment Debug ==="
+          pwd
+          ls -la
+          echo "=== Java Version ==="
+          java -version
+          echo "=== Maven Version ==="
+          mvn --version
+          echo "=== Maven Wrapper Status ==="
+          ls -la mvnw || echo "mvnw not found"
+          echo "=== .mvn directory ==="
+          ls -la .mvn/wrapper/ || echo ".mvn/wrapper not found"
+
+      - name: Fast compile check (using Maven directly)
+        run: mvn compile -T 1C
 
       - name: Static analysis (fast)
-        run: |
-          ./mvnw spotbugs:check -DskipTests || echo "Spotbugs issues found"
+        run: mvn spotbugs:check -DskipTests || echo "Spotbugs issues found"
           
   test:
     runs-on: ubuntu-latest
@@ -53,6 +70,7 @@ jobs:
         with:
           java-version: "21"
           distribution: "temurin"
+          cache: maven
 
       - name: Cache Maven dependencies
         uses: actions/cache@v4
@@ -61,11 +79,14 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
+      - name: Make Maven wrapper executable
+        run: chmod +x ./mvnw
+
       - name: Build application (skip tests for speed)
-        run: ./mvnw clean package -DskipTests
+        run: mvn clean package -DskipTests
 
       - name: Run unit tests in parallel
-        run: ./mvnw test -T 1C  # Use 1 thread per CPU core
+        run: mvn test -T 1C
 
       - name: Build Docker image with cache
         run: |
