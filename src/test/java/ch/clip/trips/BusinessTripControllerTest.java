@@ -25,7 +25,7 @@ import ch.clip.trips.dto.MeetingDto;
 import ch.clip.trips.model.Meeting;
 import org.springframework.test.context.ActiveProfiles;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
 @ActiveProfiles("test")
