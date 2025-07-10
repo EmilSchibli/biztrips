@@ -1,11 +1,11 @@
 describe("Business Trips API Integration", () => {
   beforeEach(() => {
-    // Set up API interception
-    cy.intercept("GET", "/api/trips").as("getTrips");
-    cy.intercept("POST", "/api/trips").as("createTrip");
-    cy.intercept("GET", "/api/trips/*/meetings").as("getMeetings");
-    cy.intercept("POST", "/api/trips/*/meetings").as("createMeeting");
-    cy.intercept("DELETE", "/api/trips/*").as("deleteTrip");
+    // Set up API interception with correct endpoints
+    cy.intercept("GET", "/v1/trips").as("getTrips");
+    cy.intercept("POST", "/v1/trips").as("createTrip");
+    cy.intercept("GET", "/v1/trips/*/meetings").as("getMeetings");
+    cy.intercept("POST", "/v1/trips/*/meetings").as("createMeeting");
+    cy.intercept("DELETE", "/v1/trips/*").as("deleteTrip");
 
     cy.visit("/");
     cy.wait("@getTrips");
@@ -33,7 +33,7 @@ describe("Business Trips API Integration", () => {
 
   it("should handle API errors gracefully", () => {
     // Mock a server error
-    cy.intercept("POST", "/api/trips", {
+    cy.intercept("POST", "/v1/trips", {
       statusCode: 500,
       body: { error: "Internal Server Error" },
     }).as("createTripError");

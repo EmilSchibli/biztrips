@@ -18,7 +18,7 @@ FROM eclipse-temurin:21-jre
 WORKDIR /app
 
 # Copy the built JAR from the build stage
-COPY --from=backend-build /app/target/*.jar app.jar
+COPY --from=backend-build /app/target/SpringBootSimpleBiztripsBackend-0.0.1-SNAPSHOT.war app.jar
 
 # Expose the port the app runs on
 EXPOSE 8083

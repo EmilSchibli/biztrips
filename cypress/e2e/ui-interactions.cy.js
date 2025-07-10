@@ -1,13 +1,13 @@
 describe("Business Trips UI Interactions", () => {
   beforeEach(() => {
-    cy.intercept("GET", "/api/trips", []).as("getTrips");
-    cy.intercept("POST", "/api/trips").as("createTrip");
+    cy.intercept("GET", "/v1/trips", []).as("getTrips");
+    cy.intercept("POST", "/v1/trips").as("createTrip");
     cy.visit("/");
   });
 
   it("should clear form after successful submission", () => {
     // Mock successful API response
-    cy.intercept("POST", "/api/trips", {
+    cy.intercept("POST", "/v1/trips", {
       statusCode: 201,
       body: {
         id: 1,
@@ -65,19 +65,19 @@ describe("Business Trips UI Interactions", () => {
     cy.get("#trip-destination").focus();
     cy.focused().should("have.id", "trip-destination");
 
-    cy.get("#trip-destination").tab();
+    cy.get("#trip-destination").type("{tab}");
     cy.focused().should("have.id", "trip-start-date");
 
-    cy.get("#trip-start-date").tab();
+    cy.get("#trip-start-date").type("{tab}");
     cy.focused().should("have.id", "trip-end-date");
 
-    cy.get("#trip-end-date").tab();
+    cy.get("#trip-end-date").type("{tab}");
     cy.focused().should("have.attr", "type", "submit");
   });
 
   it("should show loading states during API calls", () => {
     // Mock slow API response
-    cy.intercept("POST", "/api/trips", (req) => {
+    cy.intercept("POST", "/v1/trips", (req) => {
       req.reply((res) => {
         // Delay response by 2 seconds
         setTimeout(
